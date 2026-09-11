@@ -1,8 +1,10 @@
 import { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import Navbar from "../components/Navbar";
 import { createProject, getProjects } from "../api/projectApi";
 
 const Dashboard = () => {
+  const navigate = useNavigate();
   const [projects, setProjects] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
@@ -155,7 +157,12 @@ const Dashboard = () => {
                       {(project.members?.length || 0) !== 1 ? "s" : ""}
                     </span>
 
-                    <button className="open-project-button">Open →</button>
+                    <button
+                      className="open-project-button"
+                      onClick={() => navigate(`/projects/${project._id}`)}
+                    >
+                      Open →
+                    </button>
                   </div>
                 </article>
               ))}

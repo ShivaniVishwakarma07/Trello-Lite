@@ -3,7 +3,7 @@ import Login from "./pages/Login";
 import Register from "./pages/Register";
 import Dashboard from "./pages/Dashboard";
 import { useAuth } from "./context/AuthContext";
-
+import ProjectBoard from "./pages/ProjectBoard";
 const ProtectedRoute = ({ children }) => {
   const { user, loading } = useAuth();
 
@@ -35,6 +35,15 @@ const App = () => {
 
       <Route path="/" element={<Navigate to="/dashboard" replace />} />
       <Route path="*" element={<Navigate to="/dashboard" replace />} />
+
+      <Route
+        path="/projects/:projectId"
+        element={
+          <ProtectedRoute>
+            <ProjectBoard />
+          </ProtectedRoute>
+        }
+      />
     </Routes>
   );
 };
