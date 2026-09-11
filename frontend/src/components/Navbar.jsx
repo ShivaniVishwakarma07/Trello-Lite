@@ -11,16 +11,26 @@ const Navbar = () => {
   };
 
   return (
-    <nav>
-      <div>
-        <h2>Trello Lite</h2>
+    <header className="navbar">
+      <div className="navbar-brand">
+        <div className="brand-icon">T</div>
+        <div>
+          <h2>Trello Lite</h2>
+          <span>Project Management</span>
+        </div>
       </div>
 
-      <div>
-        <span>Welcome, {user?.name}</span>
-        <button onClick={handleLogout}>Logout</button>
+      <div className="navbar-user">
+        <div className="user-info">
+          <strong>{user?.name}</strong>
+          <span>{user?.email}</span>
+        </div>
+
+        <button className="logout-button" onClick={handleLogout}>
+          Logout
+        </button>
       </div>
-    </nav>
+    </header>
   );
 };
 

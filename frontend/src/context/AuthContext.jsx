@@ -10,8 +10,10 @@ export const AuthProvider = ({ children }) => {
   const checkAuth = async () => {
     try {
       const response = await api.get("/auth/me");
+      console.log("AUTH ME:", response.data);
       setUser(response.data.user);
-    } catch {
+    } catch (error) {
+      console.log("AUTH ME ERROR:", error.response?.data || error.message);
       setUser(null);
     } finally {
       setLoading(false);
@@ -25,6 +27,7 @@ export const AuthProvider = ({ children }) => {
     });
 
     setUser(response.data.user);
+    return response.data;
   };
 
   const register = async (name, email, password) => {
@@ -35,6 +38,7 @@ export const AuthProvider = ({ children }) => {
     });
 
     setUser(response.data.user);
+    return response.data;
   };
 
   const logout = async () => {

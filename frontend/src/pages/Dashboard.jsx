@@ -15,8 +15,10 @@ const Dashboard = () => {
   const loadProjects = async () => {
     try {
       setLoading(true);
+      setError("");
+
       const data = await getProjects();
-      setProjects(data.projects);
+      setProjects(data.projects || []);
     } catch (error) {
       setError(error.response?.data?.message || "Failed to load projects");
     } finally {
@@ -56,57 +58,110 @@ const Dashboard = () => {
   };
 
   return (
-    <div>
+    <div className="dashboard">
       <Navbar />
 
-      <main>
-        <div>
-          <h1>My Projects</h1>
+      <main className="dashboard-content">
+        <section className="dashboard-header">
+          <div>
+            <p className="eyebrow">WORKSPACE</p>
+            <h1>My Projects</h1>
+            <p className="dashboard-subtitle">
+              Organize your work, manage tasks, and keep projects moving.
+            </p>
+          </div>
 
-          <button onClick={() => setShowForm(!showForm)}>
-            {showForm ? "Cancel" : "Create Project"}
+          <button
+            className="create-project-button"
+            onClick={() => setShowForm(!showForm)}
+          >
+            {showForm ? "Cancel" : "+ Create Project"}
           </button>
-        </div>
+        </section>
 
         {showForm && (
-          <form onSubmit={handleSubmit}>
-            <input
-              type="text"
-              name="name"
-              placeholder="Project name"
-              value={formData.name}
-              onChange={handleChange}
-              required
-            />
+          <section className="project-form-card">
+            <div className="form-heading">
+              <h2>Create a new project</h2>
+              <p>Set up a workspace for your next project.</p>
+            </div>
 
-            <textarea
-              name="description"
-              placeholder="Project description"
-              value={formData.description}
-              onChange={handleChange}
-            />
-
-            <button type="submit">Create</button>
-          </form>
-        )}
-
-        {error && <p>{error}</p>}
-
-        {loading ? (
-          <p>Loading projects...</p>
-        ) : projects.length === 0 ? (
-          <p>No projects yet. Create your first project.</p>
-        ) : (
-          <div>
-            {projects.map((project) => (
-              <div key={project._id}>
-                <h3>{project.name}</h3>
-                <p>{project.description}</p>
-                <p>Members: {project.members?.length || 0}</p>
+            <form onSubmit={handleSubmit}>
+              <div className="form-field">
+                <label htmlFor="name">Project Name</label>
+                <input
+                  id="name"
+                  type="text"
+                  name="name"
+                  placeholder="e.g. Website Redesign"
+                  value={formData.name}
+                  onChange={handleChange}
+                  required
+                />
               </div>
-            ))}
-          </div>
+
+              <div className="form-field">
+                <label htmlFor="description">Description</label>
+                <textarea
+                  id="description"
+                  name="description"
+                  placeholder="What is this project about?"
+                  value={formData.description}
+                  onChange={handleChange}
+                  rows="4"
+                />
+              </div>
+
+              <button className="submit-project-button" type="submit">
+                Create Project
+              </button>
+            </form>
+          </section>
         )}
+
+        {error && <div className="error-message">{error}</div>}
+
+        <section className="projects-section">
+          {loading ? (
+            <div className="empty-state">
+              <div className="loader"></div>
+              <p>Loading projects...</p>
+            </div>
+          ) : projects.length === 0 ? (
+            <div className="empty-state">
+              <div className="empty-icon">+</div>
+              <h3>No projects yet</h3>
+              <p>Create your first project to get started.</p>
+            </div>
+          ) : (
+            <div className="projects-grid">
+              {projects.map((project) => (
+                <article className="project-card" key={project._id}>
+                  <div className="project-card-top">
+                    <div className="project-icon">
+                      {project.name?.charAt(0).toUpperCase()}
+                    </div>
+
+                    <span className="project-status">Active</span>
+                  </div>
+
+                  <h3>{project.name}</h3>
+
+                  <p>{project.description || "No description provided."}</p>
+
+                  <div className="project-card-footer">
+                    <span>
+                      {project.members?.length || 0} member
+                      {(project.members?.length || 0) !== 1 ? "s" : ""}
+                    </span>
+
+                    <button className="open-project-button">Open →</button>
+                  </div>
+                </article>
+              ))}
+            </div>
+          )}
+        </section>
       </main>
     </div>
   );
