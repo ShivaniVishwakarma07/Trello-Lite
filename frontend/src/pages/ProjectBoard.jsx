@@ -72,7 +72,7 @@ const ProjectBoard = () => {
   const [showForm, setShowForm] = useState(false);
   const [editingTask, setEditingTask] = useState(null);
   const [activeTask, setActiveTask] = useState(null);
-
+  const [priority, setPriority] = useState("medium");
   const [formData, setFormData] = useState({
     title: "",
     description: "",
@@ -140,10 +140,11 @@ const ProjectBoard = () => {
         );
       } else {
         const data = await createTask({
-          ...formData,
+          title,
+          description,
           projectId,
+          priority,
         });
-
         setTasks((currentTasks) => [data.task, ...currentTasks]);
       }
 
@@ -351,6 +352,20 @@ const ProjectBoard = () => {
                   onChange={handleChange}
                   rows="3"
                 />
+              </div>
+
+              <div className="task-form-field">
+                <label htmlFor="priority">Priority</label>
+
+                <select
+                  id="priority"
+                  value={priority}
+                  onChange={(event) => setPriority(event.target.value)}
+                >
+                  <option value="low">Low</option>
+                  <option value="medium">Medium</option>
+                  <option value="high">High</option>
+                </select>
               </div>
 
               <div className="task-form-actions">
