@@ -437,6 +437,8 @@ const TaskCard = ({ task, onEdit, onDelete }) => {
       }
     : undefined;
 
+  const priority = task.priority || "medium";
+
   return (
     <article
       ref={setNodeRef}
@@ -445,26 +447,39 @@ const TaskCard = ({ task, onEdit, onDelete }) => {
       {...attributes}
       {...listeners}
     >
-      <div className="task-card-header">
-        <h3>{task.title}</h3>
+      <div className="task-card-top">
+        <span className={`priority-badge ${priority}`}>{priority}</span>
 
         <div
           className="task-actions"
           onPointerDown={(event) => event.stopPropagation()}
         >
-          <button onClick={() => onEdit(task)}>Edit</button>
+          <button type="button" onClick={() => onEdit(task)}>
+            Edit
+          </button>
 
-          <button onClick={() => onDelete(task._id)}>Delete</button>
+          <button type="button" onClick={() => onDelete(task._id)}>
+            Delete
+          </button>
         </div>
       </div>
 
-      {task.description && <p>{task.description}</p>}
+      <h3>{task.title}</h3>
+
+      {task.description && (
+        <p className="task-description">{task.description}</p>
+      )}
 
       <div className="task-card-footer">
-        <span>{task.assignedTo ? task.assignedTo.name : "Unassigned"}</span>
+        <div className="assigned-user">
+          {task.assignedTo ? task.assignedTo.name : "Unassigned"}
+        </div>
+
+        <span className="task-status">
+          {task.status === "in-progress" ? "In Progress" : task.status}
+        </span>
       </div>
     </article>
   );
 };
-
 export default ProjectBoard;
