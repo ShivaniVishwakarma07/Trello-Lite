@@ -628,3 +628,88 @@ a {
     margin-top: 0;
   }
 }
+
+.task-form-card {
+  margin-bottom: 30px;
+  padding: 28px;
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  border-radius: 14px;
+  background: rgba(0, 0, 0, 0.14);
+}
+
+.task-form-card form {
+  display: grid;
+  gap: 18px;
+}
+
+.task-form-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+}
+
+.cancel-button {
+  padding: 11px 20px;
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  border-radius: 8px;
+  background: transparent;
+  color: #ffffffff;
+}
+
+.task-card {
+  margin-bottom: 12px;
+  padding: 16px;
+  border: 1px solid rgba(255, 255, 255, 0.16);
+  border-radius: 10px;
+  background: rgba(0, 0, 0, 0.16);
+  transition: 0.2s ease;
+}
+
+.task-card:hover {
+  border-color: rgba(255, 255, 255, 0.35);
+  transform: translateY(-2px);
+}
+
+.task-card-header {
+  display: flex;
+  justify-content: space-between;
+  gap: 10px;
+}
+
+.task-card h3 {
+  font-size: 14px;
+  line-height: 1.4;
+}
+
+.task-card > p {
+  margin-top: 9px;
+  font-size: 12px;
+  line-height: 1.5;
+  opacity: 0.65;
+}
+
+.task-actions {
+  display: flex;
+  gap: 7px;
+}
+
+.task-actions button {
+  padding: 0;
+  border: 0;
+  background: transparent;
+  color: #ffffffff;
+  font-size: 11px;
+  opacity: 0.65;
+}
+
+.task-actions button:hover {
+  opacity: 1;
+}
+
+.task-card-footer {
+  margin-top: 14px;
+  padding-top: 10px;
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+  font-size: 10px;
+  opacity: 0.5;
+}

@@ -16,11 +16,11 @@ const taskSchema = new mongoose.Schema(
       enum: ["todo", "in-progress", "done"],
       default: "todo",
     },
-    priority: {
-      type: String,
-      enum: ["low", "medium", "high"],
-      default: "medium",
-    },
+    // priority: {
+    //   type: String,
+    //   enum: ["low", "medium", "high"],
+    //   default: "medium",
+    // },
     project: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "Project",
@@ -29,20 +29,16 @@ const taskSchema = new mongoose.Schema(
     assignedTo: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "User",
+      default: null,
     },
     createdBy: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "User",
       required: true,
     },
-    position: {
-      type: Number,
-      default: 0,
-    },
   },
   {
     timestamps: true,
   },
 );
-
 module.exports = mongoose.model("Task", taskSchema);
