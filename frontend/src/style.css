@@ -628,7 +628,6 @@ a {
     margin-top: 0;
   }
 }
-
 .task-form-card {
   margin-bottom: 30px;
   padding: 28px;
@@ -712,4 +711,27 @@ a {
   border-top: 1px solid rgba(255, 255, 255, 0.1);
   font-size: 10px;
   opacity: 0.5;
+}
+
+.column-drag-over {
+  border-color: rgba(255, 255, 255, 0.55);
+  background: rgba(255, 255, 255, 0.05);
+}
+
+.task-card {
+  cursor: grab;
+}
+
+.task-card:active {
+  cursor: grabbing;
+}
+
+.task-card-dragging {
+  opacity: 0.35;
+}
+
+.task-card-overlay {
+  width: 100%;
+  min-width: 260px;
+  cursor: grabbing;
 }
