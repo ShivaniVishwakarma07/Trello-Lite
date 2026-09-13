@@ -121,6 +121,8 @@ const ProjectBoard = () => {
       title: "",
       description: "",
     });
+
+    setPriority("medium");
     setEditingTask(null);
     setShowForm(false);
   };
@@ -131,7 +133,11 @@ const ProjectBoard = () => {
 
     try {
       if (editingTask) {
-        const data = await updateTask(editingTask._id, formData);
+        const data = await updateTask(editingTask._id, {
+          ...formData,
+          priority,
+        });
+        console.log("SERVER UPDATED TASK:", data.task);
 
         setTasks((currentTasks) =>
           currentTasks.map((task) =>
@@ -140,8 +146,7 @@ const ProjectBoard = () => {
         );
       } else {
         const data = await createTask({
-          title,
-          description,
+          ...formData,
           projectId,
           priority,
         });
@@ -162,6 +167,7 @@ const ProjectBoard = () => {
       description: task.description || "",
     });
 
+    setPriority(task.priority || "medium");
     setShowForm(true);
   };
 
