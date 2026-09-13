@@ -76,6 +76,7 @@ const ProjectBoard = () => {
   const [formData, setFormData] = useState({
     title: "",
     description: "",
+    status: "todo",
   });
 
   const sensors = useSensors(
@@ -120,6 +121,7 @@ const ProjectBoard = () => {
     setFormData({
       title: "",
       description: "",
+      status: "todo",
     });
 
     setPriority("medium");
@@ -165,9 +167,11 @@ const ProjectBoard = () => {
     setFormData({
       title: task.title,
       description: task.description || "",
+      status: task.status || "todo",
     });
 
     setPriority(task.priority || "medium");
+
     setShowForm(true);
   };
 
@@ -371,6 +375,20 @@ const ProjectBoard = () => {
                   <option value="low">Low</option>
                   <option value="medium">Medium</option>
                   <option value="high">High</option>
+                </select>
+              </div>
+
+              <div className="task-form-field">
+                <label htmlFor="status">Status</label>
+
+                <select
+                  id="status"
+                  value={formData.status}
+                  onChange={handleChange}
+                >
+                  <option value="todo">To Do</option>
+                  <option value="in-progress">In Progress</option>
+                  <option value="done">Done</option>
                 </select>
               </div>
 
