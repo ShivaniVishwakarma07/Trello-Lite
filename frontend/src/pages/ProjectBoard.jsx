@@ -73,10 +73,12 @@ const ProjectBoard = () => {
   const [editingTask, setEditingTask] = useState(null);
   const [activeTask, setActiveTask] = useState(null);
   const [priority, setPriority] = useState("medium");
+  const [assignedTo, setAssignedTo] = useState("");
   const [formData, setFormData] = useState({
     title: "",
     description: "",
     status: "todo",
+    assignedTo: "",
   });
 
   const sensors = useSensors(
@@ -125,6 +127,7 @@ const ProjectBoard = () => {
     });
 
     setPriority("medium");
+    setAssignedTo("");
     setEditingTask(null);
     setShowForm(false);
   };
@@ -138,6 +141,7 @@ const ProjectBoard = () => {
         const data = await updateTask(editingTask._id, {
           ...formData,
           priority,
+          assignedTo: assignedTo || null,
         });
         console.log("SERVER UPDATED TASK:", data.task);
 
@@ -151,6 +155,7 @@ const ProjectBoard = () => {
           ...formData,
           projectId,
           priority,
+          assignedTo: assignedTo || null,
         });
         setTasks((currentTasks) => [data.task, ...currentTasks]);
       }
@@ -171,7 +176,7 @@ const ProjectBoard = () => {
     });
 
     setPriority(task.priority || "medium");
-
+    setAssignedTo(task.assignedTo?._id || "");
     setShowForm(true);
   };
 
@@ -316,6 +321,8 @@ const ProjectBoard = () => {
               });
 
               setShowForm(true);
+              setPriority("medium");
+              setAssignedTo("");
             }}
           >
             + Add Task
@@ -389,6 +396,24 @@ const ProjectBoard = () => {
                   <option value="todo">To Do</option>
                   <option value="in-progress">In Progress</option>
                   <option value="done">Done</option>
+                </select>
+              </div>
+
+              <div className="task-form-field">
+                <label htmlFor="assignedTo">Assigned To</label>
+
+                <select
+                  id="assignedTo"
+                  value={assignedTo}
+                  onChange={(event) => setAssignedTo(event.target.value)}
+                >
+                  <option value="">Unassigned</option>
+
+                  {project?.members?.map((member) => (
+                    <option key={member.user._id} value={member.user._id}>
+                      {member.user.name}
+                    </option>
+                  ))}
                 </select>
               </div>
 
