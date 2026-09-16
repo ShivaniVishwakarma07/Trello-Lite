@@ -71,6 +71,7 @@ const ProjectBoard = () => {
   const [error, setError] = useState("");
   const [showForm, setShowForm] = useState(false);
   const [editingTask, setEditingTask] = useState(null);
+  const [selectedTask, setSelectedTask] = useState(null);
   const [activeTask, setActiveTask] = useState(null);
   const [priority, setPriority] = useState("medium");
   const [assignedTo, setAssignedTo] = useState("");
@@ -198,6 +199,14 @@ const ProjectBoard = () => {
     } catch (error) {
       setError(error.response?.data?.message || "Failed to delete task");
     }
+  };
+
+  const handleTaskClick = (task) => {
+    setSelectedTask(task);
+  };
+
+  const closeTaskDetails = () => {
+    setSelectedTask(null);
   };
 
   const handleDragStart = (event) => {
@@ -464,6 +473,7 @@ const ProjectBoard = () => {
                         task={task}
                         onEdit={handleEdit}
                         onDelete={handleDelete}
+                        onTaskClick={handleTaskClick}
                       />
                     ))
                   )}
@@ -484,12 +494,59 @@ const ProjectBoard = () => {
             ) : null}
           </DragOverlay>
         </DndContext>
+        {selectedTask && (
+          <div className="task-modal-overlay" onClick={closeTaskDetails}>
+            <div
+              className="task-modal"
+              onClick={(event) => event.stopPropagation()}
+            >
+              <div className="task-modal-header">
+                <h2>{selectedTask.title}</h2>
+
+                <button
+                  type="button"
+                  className="task-modal-close"
+                  onClick={closeTaskDetails}
+                >
+                  ×
+                </button>
+              </div>
+
+              <div className="task-modal-content">
+                <div className="task-detail-item">
+                  <span>Description</span>
+                  <p>{selectedTask.description || "No description"}</p>
+                </div>
+
+                <div className="task-detail-item">
+                  <span>Priority</span>
+                  <p>{selectedTask.priority || "medium"}</p>
+                </div>
+
+                <div className="task-detail-item">
+                  <span>Status</span>
+                  <p>{selectedTask.status || "todo"}</p>
+                </div>
+
+                <div className="task-detail-item">
+                  <span>Assigned To</span>
+                  <p>{selectedTask.assignedTo?.name || "Unassigned"}</p>
+                </div>
+
+                <div className="task-detail-item">
+                  <span>Created By</span>
+                  <p>{selectedTask.createdBy?.name || "Unknown"}</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        )}
       </main>
     </div>
   );
 };
 
-const TaskCard = ({ task, onEdit, onDelete }) => {
+const TaskCard = ({ task, onEdit, onDelete, onTaskClick }) => {
   const { attributes, listeners, setNodeRef, transform, isDragging } =
     useDraggable({
       id: task._id,
@@ -528,7 +585,9 @@ const TaskCard = ({ task, onEdit, onDelete }) => {
         </div>
       </div>
 
-      <h3>{task.title}</h3>
+      <h3 className="task-title" onClick={() => onTaskClick(task)}>
+        {task.title}
+      </h3>
 
       {task.description && (
         <p className="task-description">{task.description}</p>
