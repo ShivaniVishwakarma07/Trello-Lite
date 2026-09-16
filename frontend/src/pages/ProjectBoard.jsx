@@ -554,6 +554,23 @@ const ProjectBoard = () => {
             </div>
           </div>
         )}
+
+        <header className="project-page-header">
+          <div>
+            <p className="project-page-label">PROJECT</p>
+
+            <h1>{project?.name || "Project"}</h1>
+
+            {project?.description && (
+              <p className="project-page-description">{project.description}</p>
+            )}
+          </div>
+
+          <div className="project-page-meta">
+            <span>{tasks.length} Tasks</span>
+            <span>{project?.members?.length || 0} Members</span>
+          </div>
+        </header>
       </main>
     </div>
   );
