@@ -533,9 +533,14 @@ const ProjectBoard = () => {
                   <p>{selectedTask.assignedTo?.name || "Unassigned"}</p>
                 </div>
 
-                <div className="task-detail-item">
-                  <span>Created By</span>
-                  <p>{selectedTask.createdBy?.name || "Unknown"}</p>
+                <div className="task-form-field">
+                  <label htmlFor="createdBy">Created By</label>
+                  <input
+                    id="createdBy"
+                    type="text"
+                    value={editingTask?.createdBy?.name || "Unknown"}
+                    readOnly
+                  />
                 </div>
               </div>
             </div>
