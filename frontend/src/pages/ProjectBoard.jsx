@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
+import ProjectMembers from "../components/ProjectMembers";
 import {
   DndContext,
   DragOverlay,
@@ -11,6 +12,7 @@ import {
 } from "@dnd-kit/core";
 import Navbar from "../components/Navbar";
 import api from "../api/axios";
+import { useAuth } from "../context/AuthContext";
 import {
   createTask,
   deleteTask,
@@ -62,6 +64,7 @@ const DroppableColumn = ({ column, children, count }) => {
 };
 
 const ProjectBoard = () => {
+  const { user } = useAuth();
   const { projectId } = useParams();
   const navigate = useNavigate();
 
@@ -81,6 +84,9 @@ const ProjectBoard = () => {
     status: "todo",
     assignedTo: "",
   });
+
+  const isOwner =
+    project?.owner?._id === user?._id || project?.owner === user?._id;
 
   const sensors = useSensors(
     useSensor(PointerSensor, {
@@ -492,6 +498,8 @@ const ProjectBoard = () => {
                 {activeTask.description && <p>{activeTask.description}</p>}
               </div>
             ) : null}
+
+            <ProjectMembers projectId={project?._id} isOwner={isOwner} />
           </DragOverlay>
         </DndContext>
         {selectedTask && (
