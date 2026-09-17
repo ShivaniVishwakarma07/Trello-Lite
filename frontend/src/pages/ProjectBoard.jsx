@@ -21,6 +21,14 @@ import {
   updateTask,
 } from "../api/taskApi";
 
+import { updateProject } from "../api/projectApi";
+
+const [showProjectForm, setShowProjectForm] = useState(false);
+
+const [projectForm, setProjectForm] = useState({
+  name: "",
+  description: "",
+});
 const columns = [
   {
     key: "todo",
@@ -84,6 +92,39 @@ const ProjectBoard = () => {
     status: "todo",
     assignedTo: "",
   });
+
+  const handleProjectEdit = () => {
+    setProjectForm({
+      name: project?.name || "",
+      description: project?.description || "",
+    });
+
+    setShowProjectForm(true);
+  };
+
+  const handleProjectFormChange = (event) => {
+    const { name, value } = event.target;
+
+    setProjectForm((current) => ({
+      ...current,
+      [name]: value,
+    }));
+  };
+
+  const handleProjectUpdate = async (event) => {
+    event.preventDefault();
+
+    try {
+      setError("");
+
+      const data = await updateProject(project._id, projectForm);
+
+      setProject(data.project);
+      setShowProjectForm(false);
+    } catch (error) {
+      setError(error.response?.data?.message || "Failed to update project");
+    }
+  };
 
   const isOwner =
     project?.owner?._id === user?._id || project?.owner === user?._id;
@@ -564,6 +605,16 @@ const ProjectBoard = () => {
             {project?.description && (
               <p className="project-page-description">{project.description}</p>
             )}
+
+            {isOwner && (
+              <button
+                type="button"
+                className="project-edit-button"
+                onClick={handleProjectEdit}
+              >
+                Edit Project
+              </button>
+            )}
           </div>
 
           <div className="project-page-meta">
@@ -571,6 +622,42 @@ const ProjectBoard = () => {
             <span>{project?.members?.length || 0} Members</span>
           </div>
         </header>
+
+        {showProjectForm && (
+          <form className="project-edit-form" onSubmit={handleProjectUpdate}>
+            <div className="project-form-field">
+              <label htmlFor="project-name">Project Name</label>
+
+              <input
+                id="project-name"
+                name="name"
+                value={projectForm.name}
+                onChange={handleProjectFormChange}
+                required
+              />
+            </div>
+
+            <div className="project-form-field">
+              <label htmlFor="project-description">Description</label>
+
+              <textarea
+                id="project-description"
+                name="description"
+                value={projectForm.description}
+                onChange={handleProjectFormChange}
+                rows="4"
+              />
+            </div>
+
+            <div className="project-form-actions">
+              <button type="submit">Save Changes</button>
+
+              <button type="button" onClick={() => setShowProjectForm(false)}>
+                Cancel
+              </button>
+            </div>
+          </form>
+        )}
       </main>
     </div>
   );
