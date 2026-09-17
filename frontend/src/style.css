@@ -1595,3 +1595,30 @@ a {
   background: transparent;
   color: #ffffff;
 }
+.project-header-actions {
+  display: flex;
+  gap: 10px;
+  margin-top: 16px;
+}
+
+.project-delete-button {
+  padding: 9px 16px;
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  border-radius: 9px;
+  background: transparent;
+  color: #ffffff;
+  font-size: 13px;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.project-delete-button:hover {
+  background: rgba(255, 255, 255, 0.12);
+}
+
+@media (max-width: 700px) {
+  .project-header-actions {
+    width: 100%;
+    flex-direction: column;
+  }
+}

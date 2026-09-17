@@ -21,7 +21,7 @@ import {
   updateTask,
 } from "../api/taskApi";
 
-import { updateProject } from "../api/projectApi";
+import { updateProject, deleteProject } from "../api/projectApi";
 
 const [showProjectForm, setShowProjectForm] = useState(false);
 
@@ -123,6 +123,26 @@ const ProjectBoard = () => {
       setShowProjectForm(false);
     } catch (error) {
       setError(error.response?.data?.message || "Failed to update project");
+    }
+  };
+
+  const handleProjectDelete = async () => {
+    const confirmed = window.confirm(
+      "Are you sure you want to delete this project? All project tasks will also become inaccessible.",
+    );
+
+    if (!confirmed) {
+      return;
+    }
+
+    try {
+      setError("");
+
+      await deleteProject(project._id);
+
+      navigate("/dashboard");
+    } catch (error) {
+      setError(error.response?.data?.message || "Failed to delete project");
     }
   };
 
@@ -607,13 +627,23 @@ const ProjectBoard = () => {
             )}
 
             {isOwner && (
-              <button
-                type="button"
-                className="project-edit-button"
-                onClick={handleProjectEdit}
-              >
-                Edit Project
-              </button>
+              <div className="project-header-actions">
+                <button
+                  type="button"
+                  className="project-edit-button"
+                  onClick={handleProjectEdit}
+                >
+                  Edit Project
+                </button>
+
+                <button
+                  type="button"
+                  className="project-delete-button"
+                  onClick={handleProjectDelete}
+                >
+                  Delete Project
+                </button>
+              </div>
             )}
           </div>
 
