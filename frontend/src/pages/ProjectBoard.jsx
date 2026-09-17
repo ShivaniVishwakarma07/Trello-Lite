@@ -23,12 +23,6 @@ import {
 
 import { updateProject, deleteProject } from "../api/projectApi";
 
-const [showProjectForm, setShowProjectForm] = useState(false);
-
-const [projectForm, setProjectForm] = useState({
-  name: "",
-  description: "",
-});
 const columns = [
   {
     key: "todo",
@@ -72,6 +66,7 @@ const DroppableColumn = ({ column, children, count }) => {
 };
 
 const ProjectBoard = () => {
+  const [showProjectForm, setShowProjectForm] = useState(false);
   const { user } = useAuth();
   const { projectId } = useParams();
   const navigate = useNavigate();
@@ -79,6 +74,10 @@ const ProjectBoard = () => {
   const [project, setProject] = useState(null);
   const [tasks, setTasks] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [projectForm, setProjectForm] = useState({
+    name: "",
+    description: "",
+  });
   const [error, setError] = useState("");
   const [showForm, setShowForm] = useState(false);
   const [editingTask, setEditingTask] = useState(null);
