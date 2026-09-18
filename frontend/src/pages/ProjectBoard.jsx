@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import ProjectMembers from "../components/ProjectMembers";
+import NotificationPanel from "../components/NotificationPanel";
 import {
   DndContext,
   DragOverlay,
@@ -558,8 +559,6 @@ const ProjectBoard = () => {
                 {activeTask.description && <p>{activeTask.description}</p>}
               </div>
             ) : null}
-
-            <ProjectMembers projectId={project?._id} isOwner={isOwner} />
           </DragOverlay>
         </DndContext>
         {selectedTask && (
@@ -687,6 +686,8 @@ const ProjectBoard = () => {
             </div>
           </form>
         )}
+        <ProjectMembers projectId={project._id} isOwner={isOwner} />
+        <NotificationPanel />
       </main>
     </div>
   );

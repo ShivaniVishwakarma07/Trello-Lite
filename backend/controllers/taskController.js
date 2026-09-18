@@ -22,12 +22,6 @@ const createTask = async (req, res) => {
         message: "Title and project are required",
       });
     }
-    if (task.assignedTo) {
-      sendNotification(task.assignedTo.toString(), {
-        title: "New Task Assigned",
-        message: `You have been assigned the task "${task.title}"`,
-      });
-    }
     const project = await Project.findById(projectId);
 
     if (!project) {
@@ -81,6 +75,13 @@ const createTask = async (req, res) => {
       status: status || "todo",
       position,
     });
+
+    if (task.assignedTo) {
+      sendNotification(task.assignedTo.toString(), {
+        title: "New Task Assigned",
+        message: `You have been assigned the task "${task.title}"`,
+      });
+    }
 
     const populatedTask = await Task.findById(task._id)
       .populate("assignedTo", "name email")

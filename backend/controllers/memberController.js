@@ -22,11 +22,11 @@ const getProjectMembers = async (req, res) => {
 
 const addProjectMember = async (req, res) => {
   try {
-    const { userId, role = "member" } = req.body;
+    const { email, role = "member" } = req.body;
 
-    if (!userId) {
+    if (!email) {
       return res.status(400).json({
-        message: "User ID is required",
+        message: "Email is required",
       });
     }
 
@@ -36,7 +36,9 @@ const addProjectMember = async (req, res) => {
       });
     }
 
-    const user = await User.findById(userId);
+    const user = await User.findOne({
+      email: email.toLowerCase().trim(),
+    });
 
     if (!user) {
       return res.status(404).json({
@@ -44,14 +46,14 @@ const addProjectMember = async (req, res) => {
       });
     }
 
-    if (req.project.owner.toString() === userId.toString()) {
+    if (req.project.owner.toString() === user._id.toString()) {
       return res.status(400).json({
         message: "Project owner is already part of the project",
       });
     }
 
     const alreadyMember = req.project.members.some(
-      (member) => member.user.toString() === userId.toString(),
+      (member) => member.user.toString() === user._id.toString(),
     );
 
     if (alreadyMember) {
@@ -61,7 +63,7 @@ const addProjectMember = async (req, res) => {
     }
 
     req.project.members.push({
-      user: userId,
+      user: user._id,
       role,
     });
 

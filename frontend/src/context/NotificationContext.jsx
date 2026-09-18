@@ -6,7 +6,6 @@ const NotificationContext = createContext();
 
 export const NotificationProvider = ({ children }) => {
   const { user } = useAuth();
-
   const [notifications, setNotifications] = useState([]);
 
   useEffect(() => {
@@ -23,10 +22,28 @@ export const NotificationProvider = ({ children }) => {
 
   useEffect(() => {
     if (!user?._id) {
+      if (socket.connected) {
+        socket.disconnect();
+      }
+
       return;
     }
 
-    socket.emit("join-user", user._id);
+    const joinUserRoom = () => {
+      socket.emit("join-user", user._id);
+    };
+
+    socket.on("connect", joinUserRoom);
+
+    if (!socket.connected) {
+      socket.connect();
+    } else {
+      joinUserRoom();
+    }
+
+    return () => {
+      socket.off("connect", joinUserRoom);
+    };
   }, [user]);
 
   const clearNotifications = () => {

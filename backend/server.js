@@ -10,6 +10,7 @@ const authRoutes = require("./routes/authRoutes");
 const projectRoutes = require("./routes/projectRoutes");
 const taskRoutes = require("./routes/taskRoutes");
 const memberRoutes = require("./routes/memberRoutes");
+const { initializeSocket } = require("./utils/socket");
 
 dotenv.config();
 
@@ -31,7 +32,9 @@ app.use("/api/projects/members", memberRoutes);
 app.use("/api/tasks", taskRoutes);
 
 app.get("/", (req, res) => {
-  res.json({ message: "Trello Lite API is running" });
+  res.json({
+    message: "Trello Lite API is running",
+  });
 });
 
 const PORT = process.env.PORT || 5000;
@@ -45,24 +48,21 @@ const io = new Server(server, {
   },
 });
 
+initializeSocket(io);
+
 io.on("connection", (socket) => {
   console.log(`Socket connected: ${socket.id}`);
 
   socket.on("join-user", (userId) => {
     socket.join(`user:${userId}`);
+
+    console.log(`User ${userId} joined room user:${userId}`);
   });
 
-  // socket.on("disconnect", () => {
-  //   console.log(`Socket disconnected: ${socket.id}`);
-  socket.on("test-notification", () => {
-    socket.emit("notification", {
-      title: "Test Notification",
-      message: "Socket.IO is working",
-      createdAt: new Date(),
-    });
+  socket.on("disconnect", () => {
+    console.log(`Socket disconnected: ${socket.id}`);
   });
 });
-const { initializeSocket } = require("./utils/socket");
 
 const startServer = async () => {
   await connectDB();
