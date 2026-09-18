@@ -1,4 +1,5 @@
 const User = require("../models/User");
+const { sendNotification } = require("../utils/socket");
 
 const getProjectMembers = async (req, res) => {
   try {
@@ -65,6 +66,11 @@ const addProjectMember = async (req, res) => {
     });
 
     await req.project.save();
+
+    sendNotification(user._id.toString(), {
+      title: "Added to Project",
+      message: `You were added to project "${req.project.name}"`,
+    });
 
     const updatedProject = await req.project.populate(
       "members.user",

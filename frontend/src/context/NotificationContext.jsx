@@ -1,9 +1,12 @@
 import { createContext, useContext, useEffect, useState } from "react";
 import socket from "../socket";
 import { useAuth } from "./AuthContext";
+
 const NotificationContext = createContext();
 
 export const NotificationProvider = ({ children }) => {
+  const { user } = useAuth();
+
   const [notifications, setNotifications] = useState([]);
 
   useEffect(() => {
@@ -18,6 +21,14 @@ export const NotificationProvider = ({ children }) => {
     };
   }, []);
 
+  useEffect(() => {
+    if (!user?._id) {
+      return;
+    }
+
+    socket.emit("join-user", user._id);
+  }, [user]);
+
   const clearNotifications = () => {
     setNotifications([]);
   };
@@ -29,18 +40,10 @@ export const NotificationProvider = ({ children }) => {
         clearNotifications,
       }}
     >
-      const {user} = useAuth();
       {children}
     </NotificationContext.Provider>
   );
 };
-useEffect(() => {
-  if (!user?._id) {
-    return;
-  }
-
-  socket.emit("join-user", user._id);
-}, [user]);
 
 export const useNotifications = () => {
   return useContext(NotificationContext);

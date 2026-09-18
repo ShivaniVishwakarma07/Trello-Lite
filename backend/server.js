@@ -52,8 +52,14 @@ io.on("connection", (socket) => {
     socket.join(`user:${userId}`);
   });
 
-  socket.on("disconnect", () => {
-    console.log(`Socket disconnected: ${socket.id}`);
+  // socket.on("disconnect", () => {
+  //   console.log(`Socket disconnected: ${socket.id}`);
+  socket.on("test-notification", () => {
+    socket.emit("notification", {
+      title: "Test Notification",
+      message: "Socket.IO is working",
+      createdAt: new Date(),
+    });
   });
 });
 const { initializeSocket } = require("./utils/socket");

@@ -1,7 +1,7 @@
 const Task = require("../models/Task");
 const Project = require("../models/Project");
 const User = require("../models/User");
-
+const { sendNotification } = require("../utils/socket");
 const hasProjectAccess = (project, userId) => {
   const isOwner = project.owner.toString() === userId.toString();
 
@@ -22,7 +22,12 @@ const createTask = async (req, res) => {
         message: "Title and project are required",
       });
     }
-
+    if (task.assignedTo) {
+      sendNotification(task.assignedTo.toString(), {
+        title: "New Task Assigned",
+        message: `You have been assigned the task "${task.title}"`,
+      });
+    }
     const project = await Project.findById(projectId);
 
     if (!project) {
