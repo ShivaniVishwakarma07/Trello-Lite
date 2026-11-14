@@ -2,6 +2,7 @@ const Task = require("../models/Task");
 const Project = require("../models/Project");
 const User = require("../models/User");
 const { sendNotification } = require("../utils/socket");
+
 const hasProjectAccess = (project, userId) => {
   const isOwner = project.owner.toString() === userId.toString();
 
@@ -22,6 +23,7 @@ const createTask = async (req, res) => {
         message: "Title and project are required",
       });
     }
+
     const project = await Project.findById(projectId);
 
     if (!project) {
@@ -227,6 +229,13 @@ const updateTask = async (req, res) => {
 
     await task.save();
 
+    if (task.assignedTo) {
+      sendNotification(task.assignedTo.toString(), {
+        title: "Task Updated",
+        message: `The task "${task.title}" was updated`,
+      });
+    }
+
     const updatedTask = await Task.findById(task._id)
       .populate("assignedTo", "name email")
       .populate("createdBy", "name email")
@@ -317,6 +326,13 @@ const moveTask = async (req, res) => {
     task.position = position;
 
     await task.save();
+
+    if (task.assignedTo) {
+      sendNotification(task.assignedTo.toString(), {
+        title: "Task Status Changed",
+        message: `"${task.title}" moved to ${task.status}`,
+      });
+    }
 
     const updatedTask = await Task.findById(task._id)
       .populate("assignedTo", "name email")
