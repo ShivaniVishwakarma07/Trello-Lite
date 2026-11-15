@@ -18,7 +18,7 @@ const app = express();
 
 app.use(
   cors({
-    origin: "http://localhost:5173",
+    origin: "https://trello-lite-beryl.vercel.app",
     credentials: true,
   }),
 );
@@ -43,7 +43,7 @@ const server = http.createServer(app);
 
 const io = new Server(server, {
   cors: {
-    origin: ["http://localhost:5173", process.env.FRONTEND_URL],
+    origin: "https://trello-lite-beryl.vercel.app",
     credentials: true,
   },
 });
